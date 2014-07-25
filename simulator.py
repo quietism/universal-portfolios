@@ -45,7 +45,7 @@ def data_prep():
     forward = np.concatenate([prices, np.ones((len(tradelist), 1))], 1)
 
     # as per Thomas Cover, we use (today / yesterday)-style returns
-    invback = [ (1.0 / x) for x in backward]
+    invback = [ (1.0 / float(x)) for x in backward]
     returns = np.multiply(forward, invback)
 
     # get rid of the garbage rows: the first and last
@@ -79,8 +79,8 @@ def emp_b(k):
         exit(0)
     if k == 1:
         b1 = np.ones((len(tradelist), 1))
-        pie = (1.0 / float(len(tradelist)))
-        b1 = pie * b1
+        unif = (1.0 / float(len(tradelist)))
+        b1 = unif * b1
         return b1
     quantization = 20
     numer = 0
@@ -149,16 +149,11 @@ def main():
     data_fetch()
     data_prep()
     
-    # Six years:
-    # emp_S_hat(1256)
+    # only have (daycount - 1) days of returns,
+    # (we have to make purchases on day 0, no returns yet) 
+    # returns appear on days 1 thru (daycount - 1):
     
-    # 5 years: 
-    # emp_S_hat(1005)
+    emp_S_hat(daycount - 1)
 
-    # 3 years:
-    emp_S_hat(751)
-    
-    # 1 year:
-    # emp_S_hat(250)
 
 main()
